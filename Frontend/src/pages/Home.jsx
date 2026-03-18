@@ -156,33 +156,33 @@ const Home = () => {
       {/* 2. TRUST STRIP */}
       <section style={{ padding: '3rem 0', background: 'var(--white)', borderTop: '1px solid var(--gray-100)', borderBottom: '1px solid var(--gray-100)' }}>
         <div className="container">
-          <div className="grid md-grid-4" style={{ gap: '2rem' }}>
-            <div className="flex" style={{ justifyContent: 'center' }}>
-               <Truck color="var(--primary)" size={32} />
+          <div className="trust-row">
+            <div className="trust-card">
+               <Truck color="var(--primary)" size={32} style={{ marginBottom: '1rem' }} />
                <div>
-                 <p style={{ fontWeight: 800, margin: 0, fontSize: '0.95rem' }}>Free Shipping</p>
-                 <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>On orders above ₹999</p>
+                 <p style={{ fontWeight: 800, margin: 0, fontSize: '1rem' }}>Free Shipping</p>
+                 <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>On orders above ₹999</p>
                </div>
             </div>
-            <div className="flex" style={{ justifyContent: 'center' }}>
-               <ShieldCheck color="var(--primary)" size={32} />
+            <div className="trust-card">
+               <ShieldCheck color="var(--primary)" size={32} style={{ marginBottom: '1rem' }} />
                <div>
-                 <p style={{ fontWeight: 800, margin: 0, fontSize: '0.95rem' }}>Lab Tested</p>
-                 <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>100% Purity Check</p>
+                 <p style={{ fontWeight: 800, margin: 0, fontSize: '1rem' }}>Lab Tested</p>
+                 <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>100% Purity Check</p>
                </div>
             </div>
-            <div className="flex" style={{ justifyContent: 'center' }}>
-               <Clock color="var(--primary)" size={32} />
+            <div className="trust-card">
+               <Clock color="var(--primary)" size={32} style={{ marginBottom: '1rem' }} />
                <div>
-                 <p style={{ fontWeight: 800, margin: 0, fontSize: '0.95rem' }}>Always Fresh</p>
-                 <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>Packed on order</p>
+                 <p style={{ fontWeight: 800, margin: 0, fontSize: '1rem' }}>Always Fresh</p>
+                 <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>Packed on order</p>
                </div>
             </div>
-            <div className="flex" style={{ justifyContent: 'center' }}>
-               <Droplets color="var(--primary)" size={32} />
+            <div className="trust-card">
+               <Droplets color="var(--primary)" size={32} style={{ marginBottom: '1rem' }} />
                <div>
-                 <p style={{ fontWeight: 800, margin: 0, fontSize: '0.95rem' }}>Cold Pressed</p>
-                 <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>Maximum Nutrition</p>
+                 <p style={{ fontWeight: 800, margin: 0, fontSize: '1rem' }}>Cold Pressed</p>
+                 <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>Maximum Nutrition</p>
                </div>
             </div>
           </div>
@@ -244,13 +244,13 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid md-grid-3" style={{ gap: '2.5rem', maxWidth: '1100px', margin: '0 auto' }}>
+          <div className="subscription-row">
             {[
               { title: 'Weekly Plan', price: '599', period: 'week', items: '4 snack packs', color: 'rgba(255,255,255,0.1)' },
               { title: 'Monthly Plan', price: '1999', period: 'month', items: '16 snack packs', color: 'var(--secondary)', featured: true },
               { title: '3 Month Plan', price: '5499', period: 'quarter', items: '48 snack packs', color: 'rgba(255,255,255,0.1)' }
             ].map((plan, i) => (
-              <div key={i} className={`reveal glass-panel delay-${(i + 1) * 100}`} style={{ 
+              <div key={i} className={`reveal glass-panel subscription-plan-card delay-${(i + 1) * 100}`} style={{ 
                 padding: '4rem 2.5rem', 
                 borderRadius: '32px', 
                 textAlign: 'center', 
@@ -259,7 +259,8 @@ const Home = () => {
                 border: plan.featured ? 'none' : '1px solid rgba(255,255,255,0.15)',
                 transform: plan.featured ? 'scale(1.05)' : 'none',
                 zIndex: plan.featured ? 2 : 1,
-                boxShadow: plan.featured ? '0 30px 60px rgba(0,0,0,0.3)' : 'var(--shadow-lg)'
+                boxShadow: plan.featured ? '0 30px 60px rgba(0,0,0,0.3)' : 'var(--shadow-lg)',
+                position: 'relative'
               }}>
                  {plan.featured && <span style={{ background: 'var(--primary)', color: 'white', padding: '0.4rem 1.2rem', borderRadius: 'var(--radius-full)', fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', position: 'absolute', top: '-15px', left: '50%', transform: 'translateX(-50%)' }}>Most Popular</span>}
                  <h4 style={{ marginBottom: '0.5rem', opacity: 0.8 }}>{plan.title}</h4>

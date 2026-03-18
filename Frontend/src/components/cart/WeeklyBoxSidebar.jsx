@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
-import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag, ChevronRight } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag, ChevronRight, Leaf, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const WeeklyBoxSidebar = () => {
@@ -14,136 +14,180 @@ const WeeklyBoxSidebar = () => {
     navigate('/checkout');
   };
 
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <>
-      {/* Backdrop overlay (Engineered Gray) */}
+      <style>{`
+        @keyframes cartSlide {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        @keyframes cartFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .cart-item-hover { transition: all 0.25s ease; }
+        .cart-item-hover:hover { background: var(--gray-50) !important; }
+        .qty-btn { transition: all 0.2s; }
+        .qty-btn:hover { background: var(--primary) !important; color: white !important; }
+        .cart-scroll::-webkit-scrollbar { width: 3px; }
+        .cart-scroll::-webkit-scrollbar-track { background: transparent; }
+        .cart-scroll::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+        .remove-btn { transition: all 0.2s; }
+        .remove-btn:hover { color: #e53935 !important; transform: scale(1.1); }
+      `}</style>
+
+      {/* Backdrop */}
       <div 
         style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(23, 31, 23, 0.4)',
-          zIndex: 999,
-          backdropFilter: 'blur(8px)',
-          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          zIndex: 999, backdropFilter: 'blur(6px)',
+          animation: 'cartFade 0.3s ease'
         }}
         onClick={closeSidebar}
       />
 
-      {/* Sidebar Panel (Whiteframe Framework) */}
+      {/* Sidebar */}
       <div 
         style={{
-          position: 'fixed',
-          top: 0, right: 0, bottom: 0,
-          width: '100%',
-          maxWidth: '500px',
+          position: 'fixed', top: 0, right: 0, bottom: 0,
+          width: '100%', maxWidth: '440px',
           backgroundColor: 'var(--white)',
           zIndex: 1000,
-          borderLeft: '1px solid var(--gray-200)',
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-          animation: 'slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+          display: 'flex', flexDirection: 'column',
+          boxShadow: '-8px 0 30px rgba(0,0,0,0.08)',
+          animation: 'cartSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
-        {/* Editorial Header Block */}
-        <div style={{ padding: '2.5rem 3rem', borderBottom: '1px solid var(--gray-200)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <span style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '0.5rem' }}>
-              05 / Inventory
-            </span>
-            <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 900, letterSpacing: '-0.02em' }}>
-              YOUR <span style={{ color: 'var(--primary)' }}>BOX.</span>
-            </h2>
+        {/* Header */}
+        <div style={{ 
+          padding: '1.5rem 2rem', 
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          borderBottom: '1px solid var(--gray-200)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <ShoppingBag size={22} color="var(--primary)" />
+            <div>
+              <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>Shopping Box</h2>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                {totalItems} {totalItems === 1 ? 'item' : 'items'}
+              </span>
+            </div>
           </div>
           <button 
             onClick={closeSidebar} 
-            style={{ background: 'none', border: '1px solid var(--gray-200)', cursor: 'pointer', padding: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--gray-200)'}
+            style={{ 
+              background: 'none', border: '1px solid var(--gray-200)', 
+              cursor: 'pointer', padding: '0.5rem', borderRadius: '8px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--text)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--gray-200)'; }}
           >
-            <X size={20} color="var(--text)" />
+            <X size={18} color="var(--text)" />
           </button>
         </div>
 
-        <style>{`
-          @keyframes slideInRight {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-          }
-        `}</style>
+        {/* Free Shipping Banner */}
+        {cartItems.length > 0 && (
+          <div style={{
+            margin: '1rem 2rem 0 2rem', padding: '0.6rem 1rem',
+            background: 'rgba(46,125,50,0.06)', borderRadius: '8px',
+            border: '1px solid rgba(46,125,50,0.12)',
+            display: 'flex', alignItems: 'center', gap: '0.5rem'
+          }}>
+            <Leaf size={14} color="var(--primary)" />
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)' }}>
+              Free shipping on all orders!
+            </span>
+          </div>
+        )}
 
-        {/* Dynamic Content Area (Framed Items) */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '2.5rem 3rem' }}>
+        {/* Items */}
+        <div className="cart-scroll" style={{ flex: 1, overflowY: 'auto', padding: '1rem 2rem' }}>
           {cartItems.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '6rem 0' }}>
-              <div style={{ marginBottom: '2rem', display: 'inline-flex', padding: '2rem', background: 'var(--gray-50)', border: '1px solid var(--gray-200)' }}>
-                <ShoppingBag size={48} color="var(--gray-300)" />
+            <div style={{ textAlign: 'center', padding: '5rem 1rem' }}>
+              <div style={{ 
+                width: '80px', height: '80px', margin: '0 auto 1.5rem',
+                background: 'var(--gray-50)', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <ShoppingBag size={32} color="var(--gray-300)" />
               </div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 900, marginBottom: '0.8rem' }}>BOX IS VACANT.</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2.5rem' }}>Your pantry selection is waiting for organic additions.</p>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text)' }}>Your box is empty</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem', lineHeight: 1.6 }}>
+                Start adding some organic goodness!
+              </p>
               <button 
                 className="btn btn-primary" 
-                style={{ width: '100%', borderRadius: '0', padding: '1.2rem' }}
+                style={{ width: '100%', padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontWeight: 700 }}
                 onClick={() => { closeSidebar(); navigate('/products'); }}
               >
-                BROWSE CATALOG <ArrowRight size={18} />
+                Browse Products <ArrowRight size={16} />
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingTop: '0.5rem' }}>
               {cartItems.map((item) => (
                 <div 
-                  key={`${item.id}-${item.size}`} 
+                  key={`${item.id}-${item.size}`}
+                  className="cart-item-hover"
                   style={{ 
-                    display: 'flex', 
-                    gap: '1.5rem', 
-                    padding: '1.5rem', 
-                    border: '1px solid var(--gray-200)', 
-                    margin: '-0.5px 0',
-                    transition: 'all 0.2s'
+                    display: 'flex', gap: '1rem', 
+                    padding: '1rem', borderRadius: '10px'
                   }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--gray-200)'}
                 >
-                  {/* Thumbnail (Mechanical) */}
-                  <div style={{ width: '90px', height: '90px', border: '1px solid var(--gray-100)', background: 'var(--gray-50)', flexShrink: 0, padding: '0.4rem' }}>
+                  {/* Image */}
+                  <div style={{ 
+                    width: '72px', height: '72px', borderRadius: '10px', 
+                    background: 'var(--gray-50)', flexShrink: 0, padding: '0.4rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
                     <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </div>
                   
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                      <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 900, letterSpacing: '-0.01em' }}>{item.name.toUpperCase()}</h4>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.2rem' }}>
+                      <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {item.name}
+                      </h4>
                       <button 
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-300)', padding: '0.2rem', transition: 'color 0.2s' }}
-                        onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
-                        onMouseLeave={e => e.currentTarget.style.color = 'var(--gray-300)'}
+                        className="remove-btn"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-300)', padding: '0.15rem', flexShrink: 0 }}
                         onClick={() => removeFromCart(item.id, item.size)}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} />
                       </button>
                     </div>
                     
-                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--gray-400)', textTransform: 'uppercase', marginBottom: '1.2rem', display: 'block' }}>
-                      {item.size} / PORTION
+                    <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.6rem' }}>
+                      {item.size}
                     </span>
                     
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div className="flex" style={{ gap: '0', border: '1px solid var(--gray-200)' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--gray-200)', borderRadius: '8px', overflow: 'hidden' }}>
                         <button 
-                          style={{ padding: '0.5rem', background: 'none', border: 'none', borderRight: '1px solid var(--gray-200)', cursor: 'pointer' }}
+                          className="qty-btn"
+                          style={{ padding: '0.3rem 0.5rem', background: 'none', border: 'none', borderRight: '1px solid var(--gray-200)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                           onClick={() => updateQuantity(item.id, item.size, -1)}
                         >
-                          <Minus size={14} />
+                          <Minus size={13} color="var(--text)" />
                         </button>
-                        <span style={{ padding: '0 1rem', fontWeight: 900, minWidth: '40px', textAlign: 'center', fontSize: '0.9rem' }}>{item.quantity}</span>
+                        <span style={{ padding: '0 0.7rem', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text)', minWidth: '32px', textAlign: 'center' }}>
+                          {item.quantity}
+                        </span>
                         <button 
-                          style={{ padding: '0.5rem', background: 'none', border: 'none', borderLeft: '1px solid var(--gray-200)', cursor: 'pointer' }}
+                          className="qty-btn"
+                          style={{ padding: '0.3rem 0.5rem', background: 'none', border: 'none', borderLeft: '1px solid var(--gray-200)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                           onClick={() => updateQuantity(item.id, item.size, 1)}
                         >
-                          <Plus size={14} />
+                          <Plus size={13} color="var(--text)" />
                         </button>
                       </div>
-                      <span style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--primary)' }}>₹{item.price * item.quantity}</span>
+                      <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--primary)' }}>₹{item.price * item.quantity}</span>
                     </div>
                   </div>
                 </div>
@@ -152,30 +196,47 @@ const WeeklyBoxSidebar = () => {
           )}
         </div>
 
-        {/* Footer Checkout Block (Framed) */}
+        {/* Footer */}
         {cartItems.length > 0 && (
-          <div style={{ padding: '3rem', borderTop: '1px solid var(--gray-200)', background: 'var(--white)' }}>
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem', alignItems: 'baseline' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--gray-400)', textTransform: 'uppercase' }}>Subtotal Value</span>
-                <span style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--primary)' }}>₹{cartTotal}</span>
+          <div style={{ 
+            padding: '1.5rem 2rem', 
+            borderTop: '1px solid var(--gray-200)', 
+            background: 'var(--white)'
+          }}>
+            {/* Summary */}
+            <div style={{ marginBottom: '1.2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Subtotal</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)' }}>₹{cartTotal}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--gray-400)', textTransform: 'uppercase' }}>Shipping</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>CALCULATED AT STEP 02</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Shipping</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>FREE</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.8rem', borderTop: '1px dashed var(--gray-200)' }}>
+                <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text)' }}>Total</span>
+                <span style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--primary)' }}>₹{cartTotal}</span>
               </div>
             </div>
             
             <button 
               className="btn btn-primary" 
-              style={{ width: '100%', padding: '1.5rem', fontSize: '1rem', borderRadius: '0', letterSpacing: '0.05em' }}
+              style={{ 
+                width: '100%', padding: '1.1rem', fontSize: '0.95rem', 
+                borderRadius: '10px', letterSpacing: '0.03em',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                fontWeight: 700
+              }}
               onClick={handleCheckoutClick}
             >
-              PROCEED TO SECURE CHECKOUT <ChevronRight size={18} />
+              Proceed to Checkout <ChevronRight size={18} />
             </button>
-            <p style={{ textAlign: 'center', fontSize: '0.7rem', fontWeight: 800, color: 'var(--gray-400)', marginTop: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              End-to-End Encryption Enabled
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '0.8rem' }}>
+              <ShieldCheck size={13} color="var(--gray-400)" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--gray-400)' }}>
+                Secure & encrypted checkout
+              </span>
+            </div>
           </div>
         )}
       </div>

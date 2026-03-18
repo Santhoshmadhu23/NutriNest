@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Droplets, Sun, Leaf, Truck, ShieldCheck, ArrowRight, ChevronRight } from 'lucide-react';
+import { Droplets, Sun, Leaf, Truck, ShieldCheck, ArrowRight, ChevronRight, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Process = () => {
@@ -48,62 +48,109 @@ const Process = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: 'var(--gray-50)', minHeight: '100vh', paddingTop: '80px' }}>
-      <div className="container wf-container" style={{ padding: 0 }}>
-        
-        {/* Header Block */}
-        <section className="wf-section-header reveal" style={{ textAlign: 'left', padding: '6rem 4rem' }}>
-          <div style={{ maxWidth: '800px' }}>
-             <span style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '1rem' }}>
+    <div className="process-page" style={{ paddingTop: '80px', overflowX: 'hidden' }}>
+      
+      {/* 1. HERO SECTION */}
+      <section style={{ 
+        minHeight: '60vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        background: 'linear-gradient(180deg, rgba(255, 248, 225, 0) 0%, var(--background) 100%)',
+        position: 'relative',
+        padding: '4rem 0'
+      }}>
+        {/* Decorative Blur Elements */}
+        <div style={{ position: 'absolute', top: '10%', right: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: 'rgba(255, 193, 7, 0.15)', filter: 'blur(80px)', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(46, 125, 50, 0.1)', filter: 'blur(60px)', zIndex: 0 }}></div>
+
+        <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <div className="reveal">
+             <span style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.9rem', display: 'block', marginBottom: '1rem' }}>
                03 / The Process
              </span>
-             <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 0.9, marginBottom: '2rem', fontWeight: 900 }}>
-               From <span style={{ color: 'var(--primary)' }}>Earth</span> To Plate.
+             <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 1, marginBottom: '2rem', letterSpacing: '-0.04em', marginInline: 'auto', maxWidth: '800px' }}>
+               From <span style={{ color: 'var(--primary)', position: 'relative' }}>
+                 Earth
+                 <svg style={{ position: 'absolute', bottom: '-10px', left: 0, width: '100%', height: '12px' }} viewBox="0 0 100 12" preserveAspectRatio="none">
+                   <path d="M0,10 Q50,0 100,10" fill="none" stroke="var(--secondary)" strokeWidth="6" opacity="0.4" />
+                 </svg>
+               </span> To Plate.
              </h1>
-             <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', maxWidth: '600px', lineHeight: 1.6 }}>
-               A mechanical, transparent approach to natural preservation. No shortcuts, no additives, just physics and patience.
+             <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', margin: '0 auto 3rem auto', maxWidth: '600px' }}>
+               A transparent, methodical approach to natural preservation. No shortcuts, no additives, just physics and patience.
              </p>
           </div>
-        </section>
-
-        {/* Serial Process Steps */}
-        <div className="wf-grid-bordered">
-           {steps.map((step, idx) => (
-             <div key={idx} className="md-grid-2 reveal" style={{ background: 'var(--white)', margin: '-0.5px' }}>
-                <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1px solid var(--gray-200)' }}>
-                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                      <span style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--gray-100)', lineHeight: 1 }}>{step.id}</span>
-                      <div style={{ background: 'var(--primary)', color: 'white', padding: '0.6rem', borderRadius: '4px' }}>{step.icon}</div>
-                   </div>
-                   <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>{step.title}</h3>
-                   <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>{step.text}</p>
-                </div>
-                <div style={{ padding: '0', position: 'relative', height: '400px', overflow: 'hidden' }}>
-                   <img 
-                     src={step.img} 
-                     alt={step.title} 
-                     style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(100%) brightness(0.9) contrast(1.1)' }} 
-                   />
-                   <div style={{ position: 'absolute', bottom: '0', right: '0', background: 'var(--white)', padding: '1rem 2rem', fontSize: '0.7rem', fontWeight: 900, borderLeft: '1px solid var(--gray-200)', borderTop: '1px solid var(--gray-200)' }}>
-                     PHASE_{step.id} // VALIDATED
-                   </div>
-                </div>
-             </div>
-           ))}
         </div>
+      </section>
 
-        {/* Final Information Block */}
-        <div style={{ padding: '5rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--gray-100)', borderTop: '1px solid var(--gray-200)' }}>
-           <div>
-              <h4 style={{ fontSize: '1.8rem', fontWeight: 900 }}>Quality Architecture.</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>See how we measure purity levels in our final packaging phase.</p>
-           </div>
-           <Link to="/quality" className="btn" style={{ borderRadius: '0', background: 'var(--white)', border: '1px solid var(--gray-200)', fontWeight: 900 }}>
-             OUR QUALITY STANDARDS <ChevronRight size={18} />
-           </Link>
+      {/* 2. PROCESS STEPS */}
+      <section className="section container" style={{ position: 'relative' }}>
+        {/* Connecting Line (Desktop) */}
+        <div className="desktop-only" style={{ position: 'absolute', left: '50%', top: '5%', bottom: '5%', width: '4px', background: 'var(--gray-200)', borderRadius: '2px', transform: 'translateX(-50%)', zIndex: 0 }}></div>
+
+        <div className="grid" style={{ gap: '6rem', position: 'relative', zIndex: 1 }}>
+           {steps.map((step, idx) => {
+             const isEven = idx % 2 === 0;
+             return (
+               <div key={idx} className={`grid md-grid-2 reveal delay-${(idx + 1) * 100}`} style={{ alignItems: 'center', gap: '3rem' }}>
+                 
+                 {/* Text Content */}
+                 <div style={{ order: isEven ? 1 : 2, padding: '2rem' }} className={!isEven ? 'text-right' : ''}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: !isEven ? 'flex-end' : 'flex-start', gap: '1rem', marginBottom: '1.5rem' }}>
+                       <span style={{ fontSize: '4rem', fontWeight: 900, color: 'rgba(46, 125, 50, 0.1)', lineHeight: 1 }}>{step.id}</span>
+                       <div style={{ background: 'var(--primary)', color: 'white', padding: '0.8rem', borderRadius: '12px', boxShadow: 'var(--shadow-primary)' }}>
+                          {step.icon}
+                       </div>
+                    </div>
+                    <h3 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>{step.title}</h3>
+                    <p style={{ fontSize: '1.15rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>{step.text}</p>
+                 </div>
+
+                 {/* Image Content */}
+                 <div style={{ order: isEven ? 2 : 1, position: 'relative' }} className="glass-panel">
+                    <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '32px', height: '400px' }}>
+                       <img 
+                         src={step.img} 
+                         alt={step.title} 
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
+                         onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                         onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                       />
+                       <div style={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)', fontSize: '0.75rem', fontWeight: 900, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                         <Activity size={14} /> PHASE {step.id} ACTIVE
+                       </div>
+                    </div>
+                 </div>
+
+               </div>
+             );
+           })}
         </div>
+      </section>
 
-      </div>
+      {/* 3. BOTTOM CTA */}
+      <section className="section container">
+         <div className="reveal glass-panel" style={{ 
+           padding: '5rem 4rem', 
+           display: 'flex', 
+           flexDirection: 'row',
+           justifyContent: 'space-between', 
+           alignItems: 'center', 
+           borderRadius: '48px',
+           background: 'linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(46,125,50,0.1) 100%)',
+           flexWrap: 'wrap',
+           gap: '2rem'
+         }}>
+            <div style={{ maxWidth: '600px' }}>
+               <h4 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1rem' }}>Quality <span style={{ color: 'var(--primary)'}}>Architecture.</span></h4>
+               <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>See how we measure purity levels in our final packaging phase.</p>
+            </div>
+            <Link to="/products" className="btn btn-primary" style={{ padding: '1.2rem 2.5rem', fontSize: '1.1rem' }}>
+              Explore Products <ArrowRight size={20} />
+            </Link>
+         </div>
+      </section>
+
     </div>
   );
 };

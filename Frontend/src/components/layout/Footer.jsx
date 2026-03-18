@@ -1,15 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Instagram, Twitter, Facebook, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Leaf, Instagram, Twitter, Facebook, MapPin, Phone, Send, Loader2, Check } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setStatus('loading');
+    try {
+      const response = await fetch('http://localhost/NutriNest/Backend/api/subscribe.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+      
+      if (response.ok || response.status === 201) {
+        setStatus('success');
+        setMessage(data.message || 'Thanks for subscribing!');
+        setEmail('');
+      } else {
+        setStatus('error');
+        setMessage(data.message || 'Something went wrong.');
+      }
+    } catch (err) {
+      setStatus('error');
+      setMessage('Network error. Please try again later.');
+    }
+
+    // Reset message after 5 seconds
+    setTimeout(() => {
+      if (status !== 'success') {
+         setStatus('idle');
+         setMessage('');
+      }
+    }, 5000);
+  };
 
   return (
     <footer style={{ backgroundColor: 'var(--primary)', color: 'var(--white)', position: 'relative', overflow: 'hidden' }}>
       {/* Wave Divider (Seamless connection) */}
-      <div style={{ transform: 'rotate(180deg) translateY(2px)', lineHeight: 0 }}>
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style={{ fill: 'var(--background)', width: '100%', height: '60px' }}>
+      <div style={{ transform: 'rotate(180deg)', lineHeight: 0, width: '100%', marginBottom: '-1px' }}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: '80px', fill: 'var(--background)' }}>
           <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,137.65,130.6,215,117.8,252.17,111.45,287.65,92.1,321.39,56.44Z"></path>
         </svg>
       </div>
@@ -66,24 +104,41 @@ const Footer = () => {
           <div style={{ flexGrow: 1, minWidth: '280px' }}>
             <h4 style={{ color: 'var(--secondary)', fontSize: '1.2rem', marginBottom: '1.5rem', fontWeight: 800 }}>Join the Nest</h4>
             <p style={{ opacity: 0.8, fontSize: '0.95rem', marginBottom: '1.5rem' }}>Get weekly health tips and exclusive first access to new seasonal snacks.</p>
-            <div style={{ position: 'relative' }}>
+            <form onSubmit={handleSubscribe} style={{ position: 'relative' }}>
               <input 
                 type="email" 
                 placeholder="email@nest.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={status === 'loading' || status === 'success'}
                 style={{ 
-                  width: '100%', padding: '1.1rem 1.4rem', borderRadius: '12px', border: 'none', 
-                  background: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '1rem'
+                  width: '100%', padding: '1.1rem 1.4rem', borderRadius: '12px', border: status === 'error' ? '1px solid #ff6b6b' : 'none', 
+                  background: 'rgba(255,255,255,0.1)', color: 'white', fontSize: '1rem', outline: 'none'
                 }} 
               />
-              <button style={{ 
-                position: 'absolute', right: '8px', top: '8px', bottom: '8px', 
-                background: 'var(--secondary)', color: 'var(--primary)', border: 'none', 
-                borderRadius: '8px', padding: '0 1rem', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                <Send size={18} />
+              <button 
+                type="submit"
+                disabled={status === 'loading' || status === 'success'}
+                style={{ 
+                  position: 'absolute', right: '8px', top: '8px', bottom: '8px', 
+                  background: status === 'success' ? '#4ade80' : 'var(--secondary)', color: 'var(--primary)', border: 'none', 
+                  borderRadius: '8px', padding: '0 1.2rem', cursor: (status === 'loading' || status === 'success') ? 'default' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease'
+                }}
+              >
+                {status === 'loading' ? <Loader2 size={18} className="animate-spin" /> : status === 'success' ? <Check size={18} color="white" /> : <Send size={18} />}
               </button>
-            </div>
+            </form>
+            {message && (
+              <p style={{ 
+                marginTop: '0.8rem', fontSize: '0.85rem', 
+                color: status === 'success' ? '#4ade80' : status === 'error' ? '#ff6b6b' : 'var(--white)',
+                fontWeight: 600
+              }}>
+                {message}
+              </p>
+            )}
           </div>
         </div>
 
